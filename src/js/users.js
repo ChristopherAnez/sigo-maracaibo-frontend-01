@@ -1,8 +1,19 @@
 // src/js/users.js
 
-import { authFetch } from './dashboard.js';
+// Modular: importar helpers solo si no existen en el global
+import { API_BASE } from './config.js';
 
-const API_BASE = "http://localhost:8080/api";
+export function authFetch(url, options = {}) {
+  const token = localStorage.getItem('accessToken');
+  return fetch(url, {
+    ...options,
+    headers: {
+      ...(options.headers || {}),
+      'Authorization': 'Bearer ' + token,
+    }
+  });
+}
+
 let rolesCache = [];
 
 // Toast/Feedback

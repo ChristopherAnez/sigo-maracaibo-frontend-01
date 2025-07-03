@@ -4,16 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SIGO Maracaibo – Acceso</title>
-  <link rel="stylesheet" href="../src/css/style.css" />
+  <link rel="stylesheet" href="../src/shared/style.css" />
+  <link rel="stylesheet" href="../src/features/login/login.css" />
+  <!-- Elimina cualquier referencia a src/css/login.css para evitar conflictos de estilos -->
 </head>
 <body class="login-page">
   <!-- Loader inicial -->
-  <div id="loader"></div>
+  <div id="loader" class="loader"></div>
 
   <!-- Contenedor de login -->
-  <div class="login-container" style="visibility: hidden;"></div>
+  <div class="login-container"></div>
 
-  <!-- Script principal -->
-  <script type="module" src="../src/js/main.js"></script>
+  <!-- Script de login -->
+  <script type="module" src="../src/features/login/login.js"></script>
 </body>
 </html>

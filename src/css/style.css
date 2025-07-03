@@ -45,21 +45,7 @@
 /* ——————————————————————————————————————
    Layout LOGIN
    —————————————————————————————————————— */
-body.login-page {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: #f5f5f5;
-}
-.login-container {
-  width: 360px;
-  padding: 40px 30px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  text-align: center;
-}
+/* Los estilos de login están en login.css */
 .logo-wrapper {
   margin-bottom: 20px;
 }
@@ -340,105 +326,4 @@ body.dashboard-page {
    Usuarios
    —————————————————————————————————————— */
 
-.users-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
-}
-.users-table th, .users-table td {
-  padding: 10px;
-  border: 1px solid #eee;
-}
-.users-table th {
-  background: #188862;
-  color: #fff;
-}
-.users-table tr:nth-child(even) {
-  background: #f9f9f9;
-}
-.btn {
-  background: #188862;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
-  cursor: pointer;
-  margin: 0 2px;
-  font-size: 0.95em;
-}
-.btn-edit {
-  background: #3678c8;
-}
-.btn-delete {
-  background: #d9534f;
-}
-.user-management-section {
-  padding: 30px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px 0 #0002;
-  margin: 30px auto;
-  max-width: 1200px;
-}
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 10;
-  left: 0; top: 0; width: 100vw; height: 100vh;
-  background: rgba(0,0,0,0.3);
-}
-.modal-content {
-  background: #fff;
-  margin: 80px auto;
-  padding: 30px 40px;
-  border-radius: 14px;
-  width: 400px;
-  max-width: 90vw;
-  box-shadow: 0 4px 20px 0 #0005;
-  position: relative;
-}
-.modal-content label {
-  display: block;
-  margin: 10px 0 3px;
-  font-weight: 500;
-}
-.modal-content input,
-.modal-content select {
-  width: 100%;
-  padding: 6px 10px;
-  margin-bottom: 8px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 1em;
-}
-.modal-actions {
-  margin-top: 15px;
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-}
-
-.toast {
-  position: fixed;
-  bottom: 35px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #188862;
-  color: #fff;
-  padding: 15px 28px;
-  border-radius: 12px;
-  font-size: 1em;
-  box-shadow: 0 2px 12px #0003;
-  z-index: 99999;
-  opacity: 1;
-  transition: opacity .3s, bottom .5s;
-  pointer-events: none;
-}
-.toast.error {
-  background: #d9534f;
-}
-.toast.fadeout {
-  opacity: 0;
-  bottom: 15px;
-  transition: opacity .4s, bottom .4s;
-}
+/* Los estilos de usuarios están en users.css */

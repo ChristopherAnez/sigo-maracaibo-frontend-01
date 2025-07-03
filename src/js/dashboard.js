@@ -1,6 +1,15 @@
 // src/js/dashboard.js
 
-import { initUserManagement } from './users.js';
+// Modular: solo importa users.js si existe la sección de usuarios
+let initUserManagement;
+if (document.getElementById('user-management')) {
+  import('./users.js').then(mod => {
+    initUserManagement = mod.initUserManagement;
+    if (typeof initUserManagement === 'function') {
+      initUserManagement();
+    }
+  });
+}
 
 // Protección del dashboard: si no hay JWT, redirige a login
 if (!localStorage.getItem('accessToken')) {
@@ -102,8 +111,8 @@ if (userInfoDiv) {
   userInfoDiv.textContent = username;
 }
 
-// --- Integrar gestión de usuarios ---
-initUserManagement();
+// --- Integración modular de gestión de usuarios ---
+// Ahora se importa dinámicamente arriba si existe la sección
 
 // --- Evento para volver al dashboard ---
 document.addEventListener("DOMContentLoaded", () => {
