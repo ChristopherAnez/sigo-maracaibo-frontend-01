@@ -1,38 +1,40 @@
-import { initLoader, hideLoader } from "../../shared/loader.js";
-import { API_BASE } from "../../shared/config.js";
+import { showLoader, hideLoader, initLoader } from '../../utils/loader.js';
+import { showNotification } from '../../utils/notifications.js';
+import { authService } from '../../services/auth.js';
+import { showFieldError, validateRequired } from '../../utils/validation.js';
 
-export function showFieldError(input, message) {
-  const box = input.parentElement;
-  box.classList.add("error");
-  if (!box.querySelector(".error-text")) {
-    const span = document.createElement("span");
-    span.className = "error-text";
-    span.innerText = message;
-    box.appendChild(span);
-  }
-}
-
-export async function loginUser(username, password) {
-  const response = await fetch(`${API_BASE}/auth/login`, {
-    method: 'POST',
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password })
+/**
+ * Controlador de la vista de login
+ * @param {HTMLElement} container - Contenedor donde renderizar el login
+ */
+export async function loginController(container) {
+  // Renderiza la interfaz de login
+  renderLogin(container);
+  
+  // Inicializa el loader
+  showLoader();
+  hideLoader(() => {
+    // Cuando termina de cargar, muestra el contenedor de login
+    const loginContainer = document.querySelector('.login-container');
+    if (loginContainer) {
+      loginContainer.style.visibility = 'visible';
+      loginContainer.classList.add('fade-in');
+    }
   });
-  if (!response.ok) {
-    let errorMsg = 'Credenciales inválidas';
-    try {
-      const err = await response.json();
-      errorMsg = err.message || errorMsg;
-    } catch {}
-    throw new Error(errorMsg);
-  }
-  return await response.json();
+  
+  // Configura el formulario
+  setupLoginForm();
 }
 
-export function renderLogin() {
-  const container = document.querySelector(".login-container");
-  if (!container) return;
-  container.innerHTML = `
+/**
+ * Renderiza la interfaz de login
+ * @param {HTMLElement} container - Contenedor donde renderizar el login
+ */
+export function renderLogin(container) {
+  const targetContainer = container || document.querySelector(".login-container");
+  if (!targetContainer) return;
+  
+  targetContainer.innerHTML = `
     <div class="logo-wrapper">
       <img src="images/alcaldia-maracaibo-logo.png" alt="Logo Alcaldía Maracaibo" />
     </div>
@@ -44,7 +46,7 @@ export function renderLogin() {
       </span>
     </div>
     <div class="form-box">
-      <form id="loginForm" novalidate autocomplete="off">
+      <form id="loginForm" novalidate autocomplete="off" onsubmit="return false;">
         <div class="input-box">
           <input type="text" name="username" placeholder="Nombre de usuario" autocomplete="username" required />
           <i class="bx bxs-user"></i>
@@ -53,67 +55,114 @@ export function renderLogin() {
           <input type="password" name="password" placeholder="Contraseña" autocomplete="current-password" required />
           <i class="bx bxs-lock-alt"></i>
         </div>
-        <button type="submit" class="btn">Entrar</button>
+        <!-- Espacio para mensajes de error -->
+        <div class="form-error-container"></div>
+        <button type="submit" class="btn">
+          <i class="bx bx-log-in"></i>
+          <span>Iniciar Sesión</span>
+        </button>
       </form>
     </div>
   `;
-  container.style.visibility = "visible";
-  const form = document.getElementById("loginForm");
+  targetContainer.style.visibility = "visible";
+}
+
+/**
+ * Configura el formulario de login
+ */
+function setupLoginForm() {
+  const form = document.getElementById('loginForm');
   if (!form) return;
-  form.addEventListener("submit", async (e) => {
+  
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    
     // Limpiar todos los errores previos
     form.querySelectorAll(".input-box").forEach(box => {
       box.classList.remove("error");
       const msg = box.querySelector(".error-text");
       if (msg) msg.remove();
     });
+    
     // Limpiar error global si existe
-    const globalError = form.querySelector('.form-global-error');
-    if (globalError) globalError.remove();
-    const username = form.username.value.trim();
-    const password = form.password.value.trim();
-    let valid = true;
-    if (!username) {
-      showFieldError(form.username, "El nombre de usuario es obligatorio.");
-      valid = false;
+    const errorContainer = form.querySelector('.form-error-container');
+    if (errorContainer) {
+      errorContainer.innerHTML = '';
     }
-    if (!password) {
-      showFieldError(form.password, "La contraseña es obligatoria.");
-      valid = false;
-    }
-    if (!valid) return;
+    
+    // Validar campos requeridos
+    const username = form.username;
+    const password = form.password;
+    
+    const isUsernameValid = validateRequired(username, "El nombre de usuario es obligatorio.");
+    const isPasswordValid = validateRequired(password, "La contraseña es obligatoria.");
+    
+    if (!isUsernameValid || !isPasswordValid) return;
+    
+    // Obtener referencia al botón
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnContent = submitBtn.innerHTML;
+    
+    // Cambiar estado del botón a cargando
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i><span>Iniciando sesión...</span>';
+    submitBtn.style.opacity = '0.8';
+    
+    // Mostrar loader global
+    showLoader();
+    
     try {
-      const data = await loginUser(username, password);
-      localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("username", data.username || username);
-      localStorage.setItem("email", data.email || "");
-      localStorage.setItem("userId", data.userId || "");
-      window.location.href = "dashboard.html";
-    } catch (err) {
-      // Mostrar error global como Toast flotante y autodestructible
-      let errorDiv = document.querySelector('.form-global-error');
-      if (errorDiv) errorDiv.remove();
-      errorDiv = document.createElement('div');
-      errorDiv.className = 'form-global-error';
-      errorDiv.innerText = err.message;
-      document.body.appendChild(errorDiv);
+      // Intentar login
+      event.preventDefault();
+      
+      await authService.login(username.value.trim(), password.value.trim());
+      
+      // Login exitoso
+      submitBtn.innerHTML = '<i class="bx bx-check"></i><span>¡Éxito!</span>';
+      submitBtn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+      
+      showNotification('Sesión iniciada correctamente', 'success');
+      
+      // Redirigir después de un breve delay
       setTimeout(() => {
-        errorDiv.style.opacity = '0';
-        errorDiv.style.pointerEvents = 'none';
-        setTimeout(() => errorDiv.remove(), 500);
-      }, 3500);
+        window.location.href = "dashboard.html";
+      }, 800);
+      
+    } catch (err) {
+      // Error de login
+      hideLoader();
+      
+      // Restaurar botón
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnContent;
+      submitBtn.style.opacity = '1';
+      submitBtn.style.background = '';
+      
+      // Mensaje de error
+      const errorMessage = err.message || 'Error al iniciar sesión. Verifique sus credenciales.';
+      showNotification(errorMessage, 'error');
+      
+      // Efecto visual de error en campos
+      const inputs = form.querySelectorAll('input');
+      inputs.forEach(input => {
+        input.style.borderColor = '#e74c3c';
+        input.style.boxShadow = '0 0 0 3px rgba(231, 76, 60, 0.1)';
+        
+        // Restaurar colores después de un tiempo
+        setTimeout(() => {
+          input.style.borderColor = '';
+          input.style.boxShadow = '';
+        }, 3000);
+      });
+      
+      // Animación de "shake" en el contenedor
+      const container = document.querySelector('.login-container');
+      if (container) {
+        container.style.animation = 'shake 0.5s ease-in-out';
+        setTimeout(() => {
+          container.style.animation = '';
+        }, 500);
+      }
     }
-  });
-}
-
-if (document.body.classList.contains('login-page')) {
-  document.body.classList.add('loading');
-  initLoader();
-  window.addEventListener("load", () => {
-    hideLoader(() => {
-      document.body.classList.remove('loading');
-      renderLogin();
-    });
   });
 }

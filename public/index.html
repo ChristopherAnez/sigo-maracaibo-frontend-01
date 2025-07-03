@@ -3,10 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SIGO Maracaibo – Acceso</title>
-  <link rel="stylesheet" href="../src/shared/style.css" />
+  <meta name="description" content="SIGO Maracaibo - Sistema Integrado de Gestión Operativa de la Alcaldía de Maracaibo" />
+  <meta name="theme-color" content="#188862" />
+  <title>SIGO Maracaibo – Iniciar Sesión</title>
+  <link rel="stylesheet" href="../src/utils/global.css" />
   <link rel="stylesheet" href="../src/features/login/login.css" />
-  <!-- Elimina cualquier referencia a src/css/login.css para evitar conflictos de estilos -->
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Animaciones y transiciones mejoradas */
+    .fade-in {
+      animation: fadeIn 0.6s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    
+    /* Preloader personalizado */
+    #loader {
+      z-index: 10000;
+    }
+  </style>
 </head>
 <body class="login-page">
   <!-- Loader inicial -->
@@ -15,7 +35,14 @@
   <!-- Contenedor de login -->
   <div class="login-container"></div>
 
-  <!-- Script de login -->
-  <script type="module" src="../src/features/login/login.js"></script>
+  <!-- Script principal -->
+  <script type="module">
+    import { app } from '../src/core/app.js';
+    
+    // Inicia la aplicación cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', () => {
+      app.initLoginPage();
+    });
+  </script>
 </body>
 </html>
