@@ -42,15 +42,7 @@ body.login-page {
 .logo-wrapper {
   margin-bottom: 20px;
 }
-/* Logo grande y centrado */
-.logo-wrapper img {
-  max-width: 380px;
-  width: 100%;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-  filter: drop-shadow(0 4px 16px rgba(24, 136, 98, 0.22));
-}
+/* (Regla duplicada eliminada, usar la versión responsiva al final del archivo) */
 .welcome-text {
   font-size: 24px;
   color: #188862;
@@ -236,13 +228,13 @@ body.login-page {
 
 /* Logo grande y centrado, siempre visible y responsivo */
 .logo-wrapper img {
-  max-width: 380px;
+  max-width: 480px;
   min-width: 220px;
-  width: 85%;
+  width: 100%;
   height: auto;
   display: block;
-  margin: 0 auto 8px auto;
-  filter: drop-shadow(0 6px 24px rgba(24, 136, 98, 0.22));
+  margin: 0 auto 18px auto;
+  filter: drop-shadow(0 8px 32px rgba(24, 136, 98, 0.22));
   transition: max-width 0.2s, filter 0.2s;
 }
 .welcome-text {
