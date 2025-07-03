@@ -91,18 +91,18 @@ export function renderLogin() {
       localStorage.setItem("userId", data.userId || "");
       window.location.href = "dashboard.html";
     } catch (err) {
-      // Solo mostrar un error global debajo del formulario
-      let errorDiv = form.querySelector('.form-global-error');
-      if (!errorDiv) {
-        errorDiv = document.createElement('div');
-        errorDiv.className = 'form-global-error';
-        errorDiv.style.color = '#e74c3c';
-        errorDiv.style.margin = '10px 0 0 0';
-        errorDiv.style.fontSize = '14px';
-        errorDiv.style.fontWeight = '500';
-        form.appendChild(errorDiv);
-      }
+      // Mostrar error global como Toast flotante y autodestructible
+      let errorDiv = document.querySelector('.form-global-error');
+      if (errorDiv) errorDiv.remove();
+      errorDiv = document.createElement('div');
+      errorDiv.className = 'form-global-error';
       errorDiv.innerText = err.message;
+      document.body.appendChild(errorDiv);
+      setTimeout(() => {
+        errorDiv.style.opacity = '0';
+        errorDiv.style.pointerEvents = 'none';
+        setTimeout(() => errorDiv.remove(), 500);
+      }, 3500);
     }
   });
 }

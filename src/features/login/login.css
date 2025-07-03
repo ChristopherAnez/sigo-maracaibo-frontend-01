@@ -112,10 +112,6 @@ body.login-page {
 }
 
 
-
-
-
-
 .welcome-text {
   font-size: 1.05em;
   color: #222;
@@ -195,60 +191,59 @@ body.login-page {
   font-weight: 500;
   letter-spacing: 0.2px;
 }
+/* Toast de error global */
 .form-global-error {
-  display: block;
-  margin-top: 10px;
-  color: #fff;
+  position: fixed;
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99999;
+  min-width: 260px;
+  max-width: 90vw;
   background: #d9534f;
-  border-radius: 6px;
-  padding: 8px 14px;
-  box-shadow: 0 2px 8px #d9534f33;
-  font-size: 1em;
-  font-weight: 500;
+  color: #fff;
+  border-radius: 10px;
+  padding: 16px 36px;
+  box-shadow: 0 8px 32px #d9534f55, 0 2px 12px #0002;
+  font-size: 1.13em;
+  font-weight: 700;
   letter-spacing: 0.2px;
   text-align: center;
+  opacity: 0.98;
+  animation: toastPop 0.5s cubic-bezier(.68,-0.55,.27,1.55);
+  transition: opacity 0.7s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes toastPop {
+  0% { transform: translateX(-50%) scale(0.92) translateY(-30px); opacity: 0; }
+  100% { transform: translateX(-50%) scale(1) translateY(0); opacity: 0.98; }
 }
 @keyframes errorPop {
   0% { transform: scale(0.85) translateY(-10px); opacity: 0;}
   100% { transform: scale(1) translateY(0); opacity: 1;}
 }
 
-/* Cuadro blanco centrado y minimalista */
+/* Cuadro blanco centrado y minimalista con sombra destacada */
 .login-container {
+  width: 390px;
+  padding: 48px 36px 36px 36px;
   background: #fff;
   border-radius: 18px;
-  box-shadow: 0 8px 32px 0 rgba(24, 136, 98, 0.18), 0 1.5px 8px 0 rgba(0,0,0,0.10);
-  padding: 2.5rem 2.5rem 2rem 2.5rem;
-  width: 100%;
-  max-width: 390px;
-  margin: 60px auto 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  z-index: 2;
+  box-shadow: 0 10px 40px 0 rgba(24, 136, 98, 0.22), 0 2px 16px 0 rgba(0,0,0,0.13);
   text-align: center;
-  gap: 10px;
-  animation: loginPopIn 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+  transition: box-shadow 0.3s cubic-bezier(.4,0,.2,1);
 }
 
-@keyframes loginPopIn {
-  0% { transform: scale(0.92) translateY(40px); opacity: 0;}
-  100% { transform: scale(1) translateY(0); opacity: 1;}
-}
-.logo-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 18px;
-}
+/* Logo grande y centrado, siempre visible y responsivo */
 .logo-wrapper img {
-  width: 150px;
+  max-width: 380px;
+  min-width: 220px;
+  width: 85%;
   height: auto;
   display: block;
-  margin: 0 auto;
-  filter: drop-shadow(0 4px 16px rgba(24, 136, 98, 0.22));
+  margin: 0 auto 8px auto;
+  filter: drop-shadow(0 6px 24px rgba(24, 136, 98, 0.22));
+  transition: max-width 0.2s, filter 0.2s;
 }
 .welcome-text {
   font-size: 1.5em;
